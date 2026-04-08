@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FWM / 创意中心</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0e0e0e; }
+#fwm-app { font-family: 'DM Sans', sans-serif; background: #0e0e0e; color: #f0ede6; min-height: 100vh; display: flex; flex-direction: column; transition: background 0.2s, color 0.2s; }
+
+/* LIGHT MODE */
+#fwm-app.light { background: #f5f4f0; color: #1a1a1a; }
+#fwm-app.light .fw-nav { background: #f5f4f0; border-bottom-color: rgba(0,0,0,0.08); }
+#fwm-app.light .fw-logo { color: #5a8a00; }
+#fwm-app.light .fw-logo span { color: rgba(0,0,0,0.35); }
+#fwm-app.light .fw-sidebar { border-right-color: rgba(0,0,0,0.08); background: #f5f4f0; }
+#fwm-app.light .fw-sidebar-label { color: rgba(0,0,0,0.35); }
+#fwm-app.light .fw-sitem { color: rgba(0,0,0,0.45); }
+#fwm-app.light .fw-sitem:hover { color: #1a1a1a; background: rgba(0,0,0,0.04); }
+#fwm-app.light .fw-sitem.active { color: #1a1a1a; border-left-color: #5a8a00; background: rgba(90,138,0,0.06); }
+#fwm-app.light .fw-scount { color: rgba(0,0,0,0.35); background: rgba(0,0,0,0.06); }
+#fwm-app.light .fw-feed-title { color: #1a1a1a; }
+#fwm-app.light .fw-feed-count { color: rgba(0,0,0,0.4); }
+#fwm-app.light .fw-search { background: #ebebea; border-color: rgba(0,0,0,0.08); color: #1a1a1a; }
+#fwm-app.light .fw-search::placeholder { color: rgba(0,0,0,0.35); }
+#fwm-app.light .fw-card { background: #fff; border-color: rgba(0,0,0,0.08); }
+#fwm-app.light .fw-card:hover { transform: translateY(-2px); }
+#fwm-app.light .fw-card[data-cat="news"]:hover     { border-color: #60b4f0; background: rgba(96,180,240,0.07); }
+#fwm-app.light .fw-card[data-cat="art"]:hover      { border-color: #c4a0f5; background: rgba(196,160,245,0.07); }
+#fwm-app.light .fw-card[data-cat="creative"]:hover { border-color: #5a8a00; background: rgba(90,138,0,0.06); }
+#fwm-app.light .fw-card[data-cat="interactive"]:hover { border-color: #f09060; background: rgba(240,144,96,0.07); }
+#fwm-app.light .fw-card[data-cat="motion"]:hover   { border-color: #f06080; background: rgba(240,96,128,0.07); }
+#fwm-app.light .fw-card[data-cat="branding"]:hover { border-color: #60dca0; background: rgba(96,220,160,0.07); }
+#fwm-app.light .fw-thumb { background: #e8e7e3; }
+#fwm-app.light .fw-thumb-ph { color: rgba(0,0,0,0.25); }
+#fwm-app.light .fw-ctitle { color: #1a1a1a; }
+#fwm-app.light .fw-cdesc { color: rgba(0,0,0,0.5); }
+#fwm-app.light .fw-aname { color: rgba(0,0,0,0.45); }
+#fwm-app.light .fw-ts { color: rgba(0,0,0,0.3); }
+#fwm-app.light .fw-likebtn { color: rgba(0,0,0,0.4); }
+#fwm-app.light .fw-commentbtn { color: rgba(0,0,0,0.4); }
+#fwm-app.light .fw-avatar-sm { background: #e0deda; color: rgba(0,0,0,0.4); border-color: rgba(0,0,0,0.1); }
+#fwm-app.light .fw-modal { background: #fff; border-color: rgba(0,0,0,0.1); }
+#fwm-app.light .fw-mhead { border-bottom-color: rgba(0,0,0,0.08); }
+#fwm-app.light .fw-mtitle { color: #1a1a1a; }
+#fwm-app.light .fw-mclose { color: rgba(0,0,0,0.4); }
+#fwm-app.light .fw-mclose:hover { background: rgba(0,0,0,0.06); }
+#fwm-app.light .fw-label { color: rgba(0,0,0,0.4); }
+#fwm-app.light .fw-input, #fwm-app.light .fw-textarea, #fwm-app.light .fw-select { background: #f5f4f0; border-color: rgba(0,0,0,0.12); color: #1a1a1a; }
+#fwm-app.light .fw-input::placeholder, #fwm-app.light .fw-textarea::placeholder { color: rgba(0,0,0,0.35); }
+#fwm-app.light .fw-dropzone { background: #f5f4f0; border-color: rgba(0,0,0,0.12); }
+#fwm-app.light .fw-dz-text { color: rgba(0,0,0,0.45); }
+#fwm-app.light .fw-mfoot { border-top-color: rgba(0,0,0,0.08); }
+#fwm-app.light .fw-empty-text { color: rgba(0,0,0,0.3); }
+#fwm-app.light .fw-empty-sub { color: rgba(0,0,0,0.25); }
+#fwm-app.light .fw-comments { border-top-color: rgba(0,0,0,0.08); }
+#fwm-app.light .fw-cmt-input { background: #f5f4f0; border-color: rgba(0,0,0,0.1); color: #1a1a1a; }
+#fwm-app.light .fw-cmt-author { color: #5a8a00; }
+#fwm-app.light .fw-cmt-text { color: rgba(0,0,0,0.5); }
+#fwm-app.light .fw-detail-thumb { background: #e8e7e3; }
+#fwm-app.light .fw-detail-ph { color: rgba(0,0,0,0.25); }
+#fwm-app.light .fw-detail-title { color: #1a1a1a; }
+#fwm-app.light .fw-detail-desc { color: rgba(0,0,0,0.5); }
+#fwm-app.light .fw-detail-meta { border-top-color: rgba(0,0,0,0.08); }
+#fwm-app.light .fw-detail-link { color: #5a8a00; }
+#fwm-app.light .fw-rich-card { background: #f0efeb; border-color: rgba(0,0,0,0.1); }
+#fwm-app.light .fw-rich-title { color: #1a1a1a; }
+#fwm-app.light .fw-auth-box { background: #fff; border-color: rgba(0,0,0,0.1); }
+#fwm-app.light .fw-auth-overlay { background: rgba(200,198,192,0.92); }
+
+.fw-nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; border-bottom: 0.5px solid rgba(255,255,255,0.08); background: #0e0e0e; position: sticky; top: 0; z-index: 100; }
+.fw-logo { font-family: 'DM Mono', monospace; font-size: 13px; letter-spacing: 0.08em; color: #d4f060; }
+.fw-logo span { color: rgba(240,237,230,0.45); }
+
+.fw-layout { display: flex; flex: 1; min-height: calc(100vh - 53px); }
+.fw-sidebar { width: 200px; min-width: 200px; border-right: 0.5px solid rgba(255,255,255,0.08); padding: 24px 0; }
+.fw-sidebar-label { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(240,237,230,0.45); letter-spacing: 0.1em; padding: 0 20px 10px; text-transform: uppercase; }
+.fw-sitem { display: flex; align-items: center; gap: 10px; padding: 9px 20px; cursor: pointer; font-size: 13px; color: rgba(240,237,230,0.45); border-left: 2px solid transparent; transition: all 0.12s; }
+.fw-sitem:hover { color: #f0ede6; background: rgba(255,255,255,0.03); }
+.fw-sitem.active { color: #f0ede6; border-left-color: #d4f060; background: rgba(212,240,96,0.05); }
+.fw-scount { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(240,237,230,0.3); background: rgba(255,255,255,0.06); border-radius: 40px; padding: 1px 7px; min-width: 20px; text-align: center; }
+.fw-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+.fw-main { flex: 1; padding: 32px 40px; overflow-y: auto; }
+.fw-feed-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 20px; }
+.fw-feed-title { font-family: 'Instrument Serif', serif; font-size: 28px; font-weight: 400; }
+.fw-feed-count { font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(240,237,230,0.45); }
+.fw-search { width: 100%; background: #161616; border: 0.5px solid rgba(255,255,255,0.08); border-radius: 6px; padding: 10px 16px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: #f0ede6; outline: none; margin-bottom: 24px; }
+.fw-search::placeholder { color: rgba(240,237,230,0.4); }
+.fw-search:focus { border-color: rgba(255,255,255,0.2); }
+
+.fw-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.fw-card { background: #161616; border: 0.5px solid rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden; cursor: pointer; transition: border-color 0.15s, transform 0.15s; }
+.fw-card:hover { transform: translateY(-2px); }
+.fw-card[data-cat="news"]:hover    { border-color: #60b4f0; background: rgba(96,180,240,0.05); }
+.fw-card[data-cat="art"]:hover     { border-color: #c4a0f5; background: rgba(196,160,245,0.05); }
+.fw-card[data-cat="creative"]:hover{ border-color: #d4f060; background: rgba(212,240,96,0.05); }
+.fw-card[data-cat="interactive"]:hover { border-color: #f09060; background: rgba(240,144,96,0.05); }
+.fw-card[data-cat="motion"]:hover  { border-color: #f06080; background: rgba(240,96,128,0.05); }
+.fw-card[data-cat="branding"]:hover{ border-color: #60dca0; background: rgba(96,220,160,0.05); }
+.fw-thumb { width: 100%; height: 190px; background: #1d1d1d; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+.fw-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.fw-thumb-ph { font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(240,237,230,0.3); }
+.fw-vbadge { position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.7); color: #fff; font-family: 'DM Mono', monospace; font-size: 10px; padding: 3px 7px; border-radius: 4px; }
+.fw-cbody { padding: 14px 16px 12px; }
+.fw-cmeta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.fw-tag { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.06em; padding: 3px 9px; border-radius: 40px; }
+.fw-ctitle { font-size: 13px; font-weight: 500; line-height: 1.4; margin-bottom: 6px; color: #f0ede6; }
+.fw-cdesc { font-size: 12px; color: rgba(240,237,230,0.45); line-height: 1.5; margin-bottom: 12px; }
+.fw-cfoot { display: flex; align-items: center; justify-content: space-between; }
+.fw-cauthor { display: flex; align-items: center; gap: 7px; }
+.fw-avatar-sm { width: 22px; height: 22px; border-radius: 50%; background: #2a2a2a; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 9px; color: rgba(240,237,230,0.5); border: 0.5px solid rgba(255,255,255,0.08); flex-shrink: 0; }
+.fw-aname { font-size: 11px; color: rgba(240,237,230,0.45); }
+.fw-ts { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(240,237,230,0.35); }
+.fw-cactions { display: flex; align-items: center; gap: 6px; }
+.fw-likebtn { display: flex; align-items: center; gap: 4px; background: none; border: none; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(240,237,230,0.45); padding: 3px; transition: color 0.12s; }
+.fw-likebtn:hover, .fw-likebtn.liked { color: #f06080; }
+.fw-likebtn svg { width: 13px; height: 13px; }
+.fw-commentbtn { font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(240,237,230,0.45); background: none; border: none; cursor: pointer; padding: 3px; }
+.fw-commentbtn:hover { color: #f0ede6; }
+
+.fw-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; padding: 20px; }
+.fw-overlay.open { display: flex; }
+.fw-modal { background: #161616; border: 0.5px solid rgba(255,255,255,0.1); border-radius: 12px; width: 100%; max-width: 540px; max-height: 88vh; overflow-y: auto; }
+.fw-mhead { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 0.5px solid rgba(255,255,255,0.08); }
+.fw-mtitle { font-family: 'Instrument Serif', serif; font-size: 18px; font-weight: 400; }
+.fw-mclose { background: none; border: none; color: rgba(240,237,230,0.45); font-size: 22px; cursor: pointer; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+.fw-mclose:hover { background: rgba(255,255,255,0.06); color: #f0ede6; }
+.fw-mbody { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+.fw-label { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(240,237,230,0.45); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+.fw-input, .fw-textarea, .fw-select { width: 100%; background: #0e0e0e; border: 0.5px solid rgba(255,255,255,0.08); border-radius: 6px; padding: 9px 12px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: #f0ede6; outline: none; }
+.fw-input::placeholder, .fw-textarea::placeholder { color: rgba(240,237,230,0.4); }
+.fw-input:focus, .fw-textarea:focus { border-color: #d4f060; }
+.fw-textarea { resize: vertical; min-height: 80px; }
+.fw-select { appearance: none; cursor: pointer; }
+.fw-dropzone { border: 1px dashed rgba(255,255,255,0.1); border-radius: 6px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.15s; background: #0e0e0e; }
+.fw-dropzone:hover { border-color: #d4f060; background: rgba(212,240,96,0.04); }
+.fw-dz-text { font-size: 13px; color: rgba(240,237,230,0.45); }
+.fw-dz-text span { color: #d4f060; }
+.fw-dz-preview { display: none; }
+.fw-dz-preview img { max-height: 130px; border-radius: 6px; margin: 0 auto; }
+.fw-dz-preview.show { display: block; }
+.fw-mfoot { padding: 16px 20px; border-top: 0.5px solid rgba(255,255,255,0.08); display: flex; justify-content: flex-end; gap: 8px; }
+
+.fw-auth-overlay { position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,0.93); display: flex; align-items: center; justify-content: center; }
+.fw-auth-box { background: #1a1a1a; border: 0.5px solid rgba(255,255,255,0.14); border-radius: 14px; width: 360px; padding: 32px; display: flex; flex-direction: column; gap: 18px; }
+
+.fw-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 100px 20px; gap: 10px; text-align: center; }
+.fw-empty-icon { font-size: 40px; opacity: 0.2; }
+.fw-empty-text { font-family: 'Instrument Serif', serif; font-size: 20px; color: rgba(240,237,230,0.4); }
+.fw-empty-sub { font-size: 13px; color: rgba(240,237,230,0.3); }
+
+.fw-comments { border-top: 0.5px solid rgba(255,255,255,0.08); padding: 16px 20px; }
+.fw-cmt-item { display: flex; gap: 10px; margin-bottom: 12px; }
+.fw-cmt-author { font-family: 'DM Mono', monospace; font-size: 11px; color: #d4f060; margin-bottom: 3px; }
+.fw-cmt-text { font-size: 12px; color: rgba(240,237,230,0.45); line-height: 1.5; }
+.fw-cmt-row { display: flex; gap: 8px; margin-top: 10px; }
+.fw-cmt-input { flex: 1; background: #0e0e0e; border: 0.5px solid rgba(255,255,255,0.08); border-radius: 6px; padding: 8px 12px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: #f0ede6; outline: none; }
+.fw-cmt-input:focus { border-color: rgba(255,255,255,0.2); }
+
+.fw-detail-thumb { width: 100%; height: 240px; background: #1a1a1a; overflow: hidden; position: relative; }
+.fw-rich-card { display:block; border-radius:10px; overflow:hidden; border:0.5px solid rgba(255,255,255,0.1); text-decoration:none; transition:border-color 0.15s; background:#1a1a1a; }
+.fw-rich-card:hover { border-color:rgba(255,255,255,0.22); }
+.fw-rich-thumb { width:100%; height:200px; background-size:cover; background-position:center; position:relative; display:flex; align-items:center; justify-content:center; }
+.fw-rich-platform-badge { position:absolute; top:10px; left:10px; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.06em; padding:3px 10px; border-radius:40px; backdrop-filter:blur(4px); }
+.fw-rich-play { width:44px; height:44px; border-radius:50%; background:rgba(0,0,0,0.55); display:flex; align-items:center; justify-content:center; color:#fff; font-size:16px; padding-left:3px; }
+.fw-rich-info { padding:12px 14px; }
+.fw-rich-title { font-size:13px; font-weight:500; color:#f0ede6; margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.fw-rich-url { font-family:'DM Mono',monospace; font-size:10px; color:rgba(240,237,230,0.35); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.fw-carousel { width: 100%; height: 100%; position: relative; overflow: hidden; }
+.fw-carousel-track { display: flex; height: 100%; transition: transform 0.3s ease; }
+.fw-carousel-slide { min-width: 100%; height: 100%; flex-shrink: 0; }
+.fw-carousel-slide img { width: 100%; height: 100%; object-fit: cover; }
+.fw-carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); border: none; color: #fff; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; z-index: 2; }
+.fw-carousel-btn:hover { background: rgba(0,0,0,0.8); }
+.fw-carousel-prev { left: 10px; }
+.fw-carousel-next { right: 10px; }
+.fw-carousel-dots { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; }
+.fw-carousel-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: background 0.15s; }
+.fw-carousel-dot.active { background: #fff; }
+.fw-img-count { position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.6); color: #fff; font-family: 'DM Mono', monospace; font-size: 10px; padding: 3px 7px; border-radius: 4px; }
+.fw-detail-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.fw-detail-ph { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 12px; color: rgba(240,237,230,0.3); }
+.fw-detail-body { padding: 22px; }
+.fw-detail-title { font-family: 'Instrument Serif', serif; font-size: 24px; margin-bottom: 10px; }
+.fw-detail-desc { font-size: 13px; color: rgba(240,237,230,0.5); line-height: 1.7; margin-bottom: 16px; }
+.fw-detail-link { font-family: 'DM Mono', monospace; font-size: 11px; color: #d4f060; word-break: break-all; }
+.fw-detail-meta { display: flex; align-items: center; gap: 12px; margin-top: 14px; padding-top: 14px; border-top: 0.5px solid rgba(255,255,255,0.08); }
+</style>
+</head>
+<body>
+<div id="fwm-app">
+
+  <!-- AUTH -->
+  <div class="fw-auth-overlay" id="authOverlay">
+    <div class="fw-auth-box">
+      <div style="font-family:'DM Mono',monospace;font-size:12px;color:#d4f060;letter-spacing:0.1em;">FWM /</div>
+      <div style="font-family:'Instrument Serif',serif;font-size:22px;color:#f0ede6;">创意中心</div>
+      <div style="font-size:13px;color:rgba(240,237,230,0.45);margin-top:-10px;">团队内部灵感分享平台</div>
+      <div style="display:flex;border-bottom:1px solid rgba(212,240,96,0.2);margin-bottom:4px;">
+        <button id="loginTab" onclick="switchAuthTab('login')"
+          style="flex:1;background:none;border:none;border-bottom:2px solid #d4f060;padding:10px 0;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:0.06em;cursor:pointer;color:#d4f060;margin-bottom:-1px;">
+          登录
+        </button>
+        <button id="signupTab" onclick="switchAuthTab('signup')"
+          style="flex:1;background:none;border:none;border-bottom:2px solid transparent;padding:10px 0;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:0.06em;cursor:pointer;color:rgba(212,240,96,0.4);margin-bottom:-1px;">
+          注册
+        </button>
+      </div>
+      <div id="loginForm" style="display:flex;flex-direction:column;gap:12px;">
+        <div><div class="fw-label">邮箱</div><input class="fw-input" type="email" id="loginEmail" placeholder="you@flatwhitemotion.com"></div>
+        <div><div class="fw-label">密码</div><input class="fw-input" type="password" id="loginPassword" placeholder="••••••••"></div>
+        <div id="loginError" style="font-size:12px;color:#f06080;display:none;"></div>
+        <button onclick="doLogin()" style="width:100%;margin-top:4px;padding:12px;background:#d4f060;color:#0e0e0e;border:none;border-radius:40px;font-family:'DM Mono',monospace;font-size:13px;font-weight:500;letter-spacing:0.06em;cursor:pointer;">进入 →</button>
+      </div>
+      <div id="signupForm" style="display:none;flex-direction:column;gap:12px;">
+        <div><div class="fw-label">姓名</div><input class="fw-input" type="text" id="signupName" placeholder="你的名字"></div>
+        <div><div class="fw-label">邮箱</div><input class="fw-input" type="email" id="signupEmail" placeholder="you@flatwhitemotion.com"></div>
+        <div><div class="fw-label">密码</div><input class="fw-input" type="password" id="signupPassword" placeholder="至少 6 位"></div>
+        <div id="signupError" style="font-size:12px;color:#f06080;display:none;"></div>
+        <button onclick="doSignup()" style="width:100%;margin-top:4px;padding:12px;background:#d4f060;color:#0e0e0e;border:none;border-radius:40px;font-family:'DM Mono',monospace;font-size:13px;font-weight:500;letter-spacing:0.06em;cursor:pointer;">创建账号 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <nav class="fw-nav">
+    <div class="fw-logo">flatwhite<span>/</span>motion</div>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <button onclick="openPostModal()" style="background:#d4f060;color:#0e0e0e;border:none;border-radius:40px;padding:8px 18px;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;cursor:pointer;letter-spacing:0.04em;">+ 分享</button>
+      <button id="themeBtn" onclick="toggleTheme()" title="切换亮暗模式" style="background:none;border:0.5px solid rgba(255,255,255,0.1);color:rgba(240,237,230,0.6);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;">🌙</button>
+      <div id="navAvatar" onclick="doLogout()" title="退出登录" style="width:32px;height:32px;border-radius:50%;background:#2a2a2a;border:0.5px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;color:rgba(240,237,230,0.45);cursor:pointer;">—</div>
+    </div>
+  </nav>
+
+  <div class="fw-layout">
+    <!-- SIDEBAR -->
+    <div class="fw-sidebar">
+      <div class="fw-sidebar-label">分类</div>
+      <div class="fw-sitem active" onclick="setFilter('all',this)"><div class="fw-dot" style="background:rgba(240,237,230,0.4)"></div><span style="flex:1">全部</span><span class="fw-scount" id="count-all">0</span></div>
+      <div class="fw-sitem" onclick="setFilter('news',this)"><div class="fw-dot" style="background:#60b4f0"></div><span style="flex:1">新闻</span><span class="fw-scount" id="count-news">0</span></div>
+      <div class="fw-sitem" onclick="setFilter('art',this)"><div class="fw-dot" style="background:#c4a0f5"></div><span style="flex:1">美术</span><span class="fw-scount" id="count-art">0</span></div>
+      <div class="fw-sitem" onclick="setFilter('creative',this)"><div class="fw-dot" style="background:#d4f060"></div><span style="flex:1">创意</span><span class="fw-scount" id="count-creative">0</span></div>
+      <div class="fw-sitem" onclick="setFilter('interactive',this)"><div class="fw-dot" style="background:#f09060"></div><span style="flex:1">交互</span><span class="fw-scount" id="count-interactive">0</span></div>
+      <div class="fw-sitem" onclick="setFilter('motion',this)"><div class="fw-dot" style="background:#f06080"></div><span style="flex:1">动态设计</span><span class="fw-scount" id="count-motion">0</span></div>
+      <div class="fw-sitem" onclick="setFilter('branding',this)"><div class="fw-dot" style="background:#60dca0"></div><span style="flex:1">品牌</span><span class="fw-scount" id="count-branding">0</span></div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="fw-main">
+      <div class="fw-feed-header">
+        <div class="fw-feed-title" id="feedTitle">全部帖子</div>
+        <div class="fw-feed-count" id="feedCount">0 篇</div>
+      </div>
+      <input class="fw-search" type="text" id="searchInput" placeholder="搜索帖子..." oninput="renderFeed()">
+      <div class="fw-grid" id="feedGrid"></div>
+      <div class="fw-empty" id="emptyState" style="display:none;">
+        <div class="fw-empty-icon">◌</div>
+        <div class="fw-empty-text">还没有内容</div>
+        <div class="fw-empty-sub">来第一个分享点什么吧</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POST MODAL -->
+  <div class="fw-overlay" id="postModal" onclick="if(event.target===this)closePostModal()">
+    <div class="fw-modal">
+      <div class="fw-mhead"><div class="fw-mtitle">分享内容</div><button class="fw-mclose" onclick="closePostModal()">×</button></div>
+      <div class="fw-mbody">
+        <div><div class="fw-label">标题</div><input class="fw-input" type="text" id="postTitle" placeholder="这是什么？"></div>
+        <div><div class="fw-label">描述</div><textarea class="fw-textarea" id="postDesc" placeholder="为什么值得分享？"></textarea></div>
+        <div><div class="fw-label">分类</div>
+          <select class="fw-select fw-input" id="postCategory">
+            <option value="news">新闻</option><option value="art">美术</option><option value="creative">创意</option>
+            <option value="interactive">交互</option><option value="motion">动态设计</option><option value="branding">品牌</option>
+          </select>
+        </div>
+        <div><div class="fw-label">图片（可多选，拖拽或点击上传）</div>
+          <div class="fw-dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
+            <div class="fw-dz-text" id="dropzoneText">将图片拖到这里，或<span>点击选择</span>（可多选）</div>
+            <div id="multiPreview" style="display:none;display:none;flex-wrap:wrap;gap:8px;justify-content:center;"></div>
+            <input type="file" id="fileInput" accept="image/*" multiple style="display:none" onchange="onFileSelect(event)">
+          </div>
+        </div>
+        <div>
+          <div class="fw-label">视频 / 外部链接（可选）</div>
+          <input class="fw-input" type="url" id="postLink" placeholder="https://instagram.com/..." oninput="onLinkInput(this.value)">
+          <div id="linkTip" style="display:none;margin-top:8px;padding:10px 12px;background:rgba(212,240,96,0.06);border:0.5px solid rgba(212,240,96,0.2);border-radius:6px;font-size:12px;color:rgba(240,237,230,0.6);line-height:1.6;">
+            💡 Instagram / 小红书 封面图无法自动抓取，建议同时上传截图作为封面
+          </div>
+        </div>
+      </div>
+      <div class="fw-mfoot">
+        <button onclick="closePostModal()" style="background:none;border:0.5px solid rgba(255,255,255,0.1);color:rgba(240,237,230,0.5);padding:8px 18px;border-radius:40px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;">取消</button>
+        <button onclick="submitPost()" style="background:#d4f060;color:#0e0e0e;border:none;padding:8px 18px;border-radius:40px;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;cursor:pointer;">发布</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DETAIL MODAL -->
+  <div class="fw-overlay" id="detailModal" onclick="if(event.target===this)closeDetailModal()">
+    <div class="fw-modal" style="max-width:580px;">
+      <div class="fw-mhead">
+        <div class="fw-mtitle" id="detailModalTitle">Post</div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button id="detailEditBtn" onclick="openEditMode()" style="display:none;background:none;border:0.5px solid rgba(212,240,96,0.3);color:#d4f060;font-family:'DM Mono',monospace;font-size:11px;padding:5px 12px;border-radius:40px;cursor:pointer;letter-spacing:0.04em;">编辑</button>
+          <button id="detailDeleteBtn" onclick="deletePost()" style="display:none;background:none;border:0.5px solid rgba(240,96,128,0.3);color:#f06080;font-family:'DM Mono',monospace;font-size:11px;padding:5px 12px;border-radius:40px;cursor:pointer;letter-spacing:0.04em;">删除</button>
+          <button class="fw-mclose" onclick="closeDetailModal()">×</button>
+        </div>
+      </div>
+      <div class="fw-detail-thumb" id="detailThumb"></div>
+      <div class="fw-detail-body">
+        <div id="detailTags" style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;"></div>
+        <div class="fw-detail-title" id="detailTitle"></div>
+        <div class="fw-detail-desc" id="detailDesc"></div>
+        <div id="detailLinkRow" style="display:none;margin-bottom:14px;"><div id="detailLinkCard"></div></div>
+        <div class="fw-detail-meta">
+          <div class="fw-avatar-sm" id="detailAuthorAvatar"></div>
+          <div class="fw-aname" id="detailAuthorName"></div>
+          <div class="fw-ts" id="detailTime"></div>
+          <div style="margin-left:auto;">
+            <button class="fw-likebtn" id="detailLikeBtn" onclick="toggleDetailLike()">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 13.4C7.6 13.1 1 9.2 1 5.5 1 3.6 2.6 2 4.5 2c1 0 2 .5 2.6 1.3l.9 1.2.9-1.2C9.5 2.5 10.5 2 11.5 2 13.4 2 15 3.6 15 5.5c0 3.7-6.6 7.6-7 7.9z"/></svg>
+              <span id="detailLikeCount">0</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="fw-comments">
+        <div class="fw-label" style="margin-bottom:12px;">评论</div>
+        <div id="detailComments"></div>
+        <div class="fw-cmt-row">
+          <input class="fw-cmt-input" type="text" id="commentInput" placeholder="写下评论…" onkeydown="if(event.key==='Enter')submitComment()">
+          <button onclick="submitComment()" style="background:none;border:0.5px solid rgba(255,255,255,0.1);color:rgba(240,237,230,0.5);font-size:12px;padding:8px 14px;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif;">发送</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDIT MODAL -->
+  <div class="fw-overlay" id="editModal" onclick="if(event.target===this)closeEditModal()">
+    <div class="fw-modal">
+      <div class="fw-mhead"><div class="fw-mtitle">编辑帖子</div><button class="fw-mclose" onclick="closeEditModal()">×</button></div>
+      <div class="fw-mbody">
+        <div><div class="fw-label">标题</div><input class="fw-input" type="text" id="editTitle" placeholder="这是什么？"></div>
+        <div><div class="fw-label">描述</div><textarea class="fw-textarea" id="editDesc" placeholder="为什么值得分享？"></textarea></div>
+        <div><div class="fw-label">分类</div>
+          <select class="fw-select fw-input" id="editCategory">
+            <option value="news">新闻</option><option value="art">美术</option><option value="creative">创意</option>
+            <option value="interactive">交互</option><option value="motion">动态设计</option><option value="branding">品牌</option>
+          </select>
+        </div>
+        <div><div class="fw-label">图片（点击或拖拽替换，可多选）</div>
+          <div class="fw-dropzone" id="editDropzone" onclick="document.getElementById('editFileInput').click()" ondragover="onEditDragOver(event)" ondragleave="onEditDragLeave(event)" ondrop="onEditDrop(event)">
+            <div class="fw-dz-text" id="editDropzoneText">拖拽新图片，或<span>点击选择</span>（可多选）</div>
+            <div id="editMultiPreview" style="display:none;flex-wrap:wrap;gap:8px;justify-content:center;"></div>
+            <input type="file" id="editFileInput" accept="image/*" multiple style="display:none" onchange="onEditFileSelect(event)">
+          </div>
+        </div>
+        <div><div class="fw-label">视频 / 外部链接（可选）</div><input class="fw-input" type="url" id="editLink" placeholder="https://instagram.com/..."></div>
+      </div>
+      <div class="fw-mfoot">
+        <button onclick="closeEditModal()" style="background:none;border:0.5px solid rgba(255,255,255,0.1);color:rgba(240,237,230,0.5);padding:8px 18px;border-radius:40px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;">取消</button>
+        <button onclick="saveEdit()" style="background:#d4f060;color:#0e0e0e;border:none;padding:8px 18px;border-radius:40px;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;cursor:pointer;">保存修改</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// localStorage for standalone HTML (no window.storage API outside Claude)
+const STORAGE_KEY = 'fwm_hub_v4';
+let state = { users:{}, posts:[], currentUser:null };
+let currentFilter='all', activeDetailId=null, pendingImages=[];
+
+function toggleTheme(){
+  const app=document.getElementById('fwm-app');
+  const btn=document.getElementById('themeBtn');
+  const isLight=app.classList.toggle('light');
+  btn.textContent=isLight?'☀️':'🌙';
+  btn.style.borderColor=isLight?'rgba(0,0,0,0.12)':'rgba(255,255,255,0.1)';
+  document.body.style.background=isLight?'#f5f4f0':'#0e0e0e';
+  localStorage.setItem('fwm_theme', isLight?'light':'dark');
+}
+
+function loadState(){try{const d=localStorage.getItem(STORAGE_KEY);if(d)state=JSON.parse(d);if(!state.users)state.users={};if(!state.posts)state.posts=[];}catch(e){}}
+function saveState(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){}}
+
+function switchAuthTab(tab){
+  document.getElementById('loginForm').style.display=tab==='login'?'flex':'none';
+  document.getElementById('signupForm').style.display=tab==='signup'?'flex':'none';
+  const lt=document.getElementById('loginTab'),st=document.getElementById('signupTab');
+  lt.style.color=tab==='login'?'#d4f060':'rgba(212,240,96,0.4)';
+  lt.style.borderBottom=tab==='login'?'2px solid #d4f060':'2px solid transparent';
+  st.style.color=tab==='signup'?'#d4f060':'rgba(212,240,96,0.4)';
+  st.style.borderBottom=tab==='signup'?'2px solid #d4f060':'2px solid transparent';
+}
+
+function doSignup(){
+  const name=document.getElementById('signupName').value.trim(),email=document.getElementById('signupEmail').value.trim().toLowerCase(),pass=document.getElementById('signupPassword').value,err=document.getElementById('signupError');
+  if(!name||!email||!pass){err.textContent='请填写所有字段';err.style.display='block';return;}
+  if(pass.length<6){err.textContent='密码至少 6 位';err.style.display='block';return;}
+  if(state.users[email]){err.textContent='该邮箱已注册';err.style.display='block';return;}
+  state.users[email]={name,email,pass,initials:name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)};
+  state.currentUser=email;saveState();enterApp();
+}
+function doLogin(){
+  const email=document.getElementById('loginEmail').value.trim().toLowerCase(),pass=document.getElementById('loginPassword').value,err=document.getElementById('loginError'),u=state.users[email];
+  if(!u||u.pass!==pass){err.textContent='邮箱或密码错误';err.style.display='block';return;}
+  state.currentUser=email;saveState();enterApp();
+}
+function doLogout(){state.currentUser=null;saveState();document.getElementById('authOverlay').style.display='flex';document.getElementById('navAvatar').textContent='—';}
+function enterApp(){document.getElementById('authOverlay').style.display='none';document.getElementById('navAvatar').textContent=state.users[state.currentUser].initials;renderFeed();}
+
+function setFilter(f,el){currentFilter=f;document.querySelectorAll('.fw-sitem').forEach(i=>i.classList.remove('active'));el.classList.add('active');document.getElementById('feedTitle').textContent={all:'全部帖子',news:'新闻',art:'美术',creative:'创意',interactive:'交互',motion:'动态设计',branding:'品牌'}[f]||f;renderFeed();}
+
+function renderFeed(){
+  const q=(document.getElementById('searchInput').value||'').toLowerCase();
+  let posts=[...state.posts].reverse();
+  if(currentFilter!=='all')posts=posts.filter(p=>p.category===currentFilter);
+  if(q)posts=posts.filter(p=>(p.title+p.desc+p.category).toLowerCase().includes(q));
+  document.getElementById('feedCount').textContent=posts.length+' 篇';
+  // update sidebar counts
+  const cats=['news','art','creative','interactive','motion','branding'];
+  const el=document.getElementById('count-all');if(el)el.textContent=state.posts.length||'';
+  cats.forEach(c=>{const e=document.getElementById('count-'+c);if(e){const n=state.posts.filter(p=>p.category===c).length;e.textContent=n||'';}});
+  const grid=document.getElementById('feedGrid'),empty=document.getElementById('emptyState');
+  if(!posts.length){grid.innerHTML='';empty.style.display='flex';return;}
+  empty.style.display='none';grid.innerHTML=posts.map(cardHTML).join('');
+}
+
+const tagLabel=c=>({news:'新闻',art:'美术',creative:'创意',interactive:'交互',motion:'动态设计',branding:'品牌'}[c]||c);
+const tagStyle=c=>({news:'color:#60b4f0;background:rgba(96,180,240,0.08);border:0.5px solid rgba(96,180,240,0.2)',art:'color:#c4a0f5;background:rgba(196,160,245,0.08);border:0.5px solid rgba(196,160,245,0.2)',creative:'color:#d4f060;background:rgba(212,240,96,0.08);border:0.5px solid rgba(212,240,96,0.2)',interactive:'color:#f09060;background:rgba(240,144,96,0.08);border:0.5px solid rgba(240,144,96,0.2)',motion:'color:#f06080;background:rgba(240,96,128,0.08);border:0.5px solid rgba(240,96,128,0.2)',branding:'color:#60dca0;background:rgba(96,220,160,0.08);border:0.5px solid rgba(96,220,160,0.2)'}[c]||'');
+function timeAgo(ts){const d=Date.now()-ts;if(d<60000)return'刚刚';if(d<3600000)return Math.floor(d/60000)+'分钟前';if(d<86400000)return Math.floor(d/3600000)+'小时前';return Math.floor(d/86400000)+'天前';}
+
+function cardHTML(p){
+  const u=state.users[p.author]||{},liked=p.likes&&state.currentUser&&p.likes.includes(state.currentUser);
+  const isV=p.link&&/instagram|twitter|xiaohongshu|x\.com|tiktok|vimeo|youtube/.test(p.link);
+  const imgs=p.images&&p.images.length?p.images:(p.image?[p.image]:[]);
+  const getPlatform=u=>{if(/instagram/.test(u))return'Instagram';if(/twitter|x\.com/.test(u))return'X';if(/xiaohongshu|xhslink/.test(u))return'小红书';if(/pinterest\.com|pin\.it/.test(u))return'Pinterest';if(/vimeo/.test(u))return'Vimeo';if(/youtube|youtu\.be/.test(u))return'YouTube';if(/tiktok/.test(u))return'TikTok';return'链接';};
+  const thumb=imgs.length?`<img src="${imgs[0]}" alt="">`:`<div class="fw-thumb-ph">${isV?'▶ '+getPlatform(p.link):'◌ 暂无图片'}</div>`;
+  const multiBadge=imgs.length>1?`<div class="fw-img-count">⊞ ${imgs.length}</div>`:'';
+  return `<div class="fw-card" data-cat="${p.category}" onclick="openDetail('${p.id}')">
+    <div class="fw-thumb">${thumb}${isV?'<div class="fw-vbadge">视频</div>':''}${multiBadge}</div>
+    <div class="fw-cbody">
+      <div class="fw-cmeta">
+        <span class="fw-tag" style="${tagStyle(p.category)}">${tagLabel(p.category)}</span>
+        <span class="fw-ts">${timeAgo(p.ts)}</span>
+      </div>
+      <div class="fw-ctitle">${p.title}</div>
+      <div class="fw-cdesc">${p.desc||''}</div>
+      <div class="fw-cfoot">
+        <div class="fw-cauthor"><div class="fw-avatar-sm">${u.initials||'?'}</div><div class="fw-aname">${u.name||'未知用户'}</div></div>
+        <div class="fw-cactions">
+          <button class="fw-likebtn ${liked?'liked':''}" onclick="event.stopPropagation();toggleLike('${p.id}')">
+            <svg viewBox="0 0 16 16" fill="${liked?'currentColor':'none'}" stroke="currentColor" stroke-width="1.5"><path d="M8 13.4C7.6 13.1 1 9.2 1 5.5 1 3.6 2.6 2 4.5 2c1 0 2 .5 2.6 1.3l.9 1.2.9-1.2C9.5 2.5 10.5 2 11.5 2 13.4 2 15 3.6 15 5.5c0 3.7-6.6 7.6-7 7.9z"/></svg>
+            ${(p.likes||[]).length}
+          </button>
+          <button class="fw-commentbtn" onclick="event.stopPropagation();openDetail('${p.id}')">◎ ${(p.comments||[]).length}</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function toggleLike(id){if(!state.currentUser)return;const p=state.posts.find(x=>x.id===id);if(!p)return;p.likes=p.likes||[];const i=p.likes.indexOf(state.currentUser);if(i>-1)p.likes.splice(i,1);else p.likes.push(state.currentUser);saveState();renderFeed();}
+
+function openDetail(id){
+  activeDetailId=id;const p=state.posts.find(x=>x.id===id);if(!p)return;const u=state.users[p.author]||{};
+  document.getElementById('detailModalTitle').textContent=tagLabel(p.category);
+  const imgs=p.images&&p.images.length?p.images:(p.image?[p.image]:[]);
+  const thumbEl=document.getElementById('detailThumb');
+  if(imgs.length>=1){
+    thumbEl.innerHTML=imgs.map(src=>`<div style="width:100%;"><img src="${src}" style="width:100%;display:block;object-fit:cover;"></div>`).join('');
+    thumbEl.style.height='auto';
+    thumbEl.style.maxHeight='none';
+  } else {
+    thumbEl.style.height='240px';
+    thumbEl.innerHTML=`<div class="fw-detail-ph">${p.link?'▶ 视频链接':'◌ 暂无图片'}</div>`;
+  }
+  document.getElementById('detailTags').innerHTML=`<span class="fw-tag" style="${tagStyle(p.category)}">${tagLabel(p.category)}</span>`;
+  document.getElementById('detailTitle').textContent=p.title;
+  document.getElementById('detailDesc').textContent=p.desc||'';
+  const lr=document.getElementById('detailLinkRow');
+  if(p.link){
+    lr.style.display='block';
+    const card=document.getElementById('detailLinkCard');
+    card.innerHTML=buildLinkCard(p.link); // show immediately
+    fetchLinkThumb(p.link, card);          // upgrade with thumbnail async
+  } else {
+    lr.style.display='none';
+  }
+  document.getElementById('detailAuthorAvatar').textContent=u.initials||'?';
+  document.getElementById('detailAuthorName').textContent=u.name||'未知用户';
+  document.getElementById('detailTime').textContent=timeAgo(p.ts);
+  const liked=(p.likes||[]).includes(state.currentUser);
+  const dlb=document.getElementById('detailLikeBtn');dlb.classList.toggle('liked',liked);dlb.querySelector('svg').setAttribute('fill',liked?'currentColor':'none');
+  document.getElementById('detailLikeCount').textContent=(p.likes||[]).length;
+  const isOwner = p.author === state.currentUser;
+  document.getElementById('detailEditBtn').style.display = isOwner ? 'inline-block' : 'none';
+  document.getElementById('detailDeleteBtn').style.display = isOwner ? 'inline-block' : 'none';
+  renderComments(p);document.getElementById('detailModal').classList.add('open');
+}
+
+function closeDetailModal(){
+  const t=document.getElementById('detailThumb');
+  t.style.height='240px';t.style.maxHeight='';
+  document.getElementById('detailModal').classList.remove('open');
+  activeDetailId=null;
+}
+function renderComments(p){
+  const box=document.getElementById('detailComments');
+  if(!p.comments||!p.comments.length){box.innerHTML='<div style="font-size:12px;color:rgba(240,237,230,0.35);margin-bottom:10px;">还没有评论</div>';return;}
+  box.innerHTML=p.comments.map(c=>{const u=state.users[c.author]||{};return`<div class="fw-cmt-item"><div class="fw-avatar-sm" style="flex-shrink:0;">${u.initials||'?'}</div><div><div class="fw-cmt-author">${u.name||'?'} <span style="color:rgba(240,237,230,0.3);font-weight:300">· ${timeAgo(c.ts)}</span></div><div class="fw-cmt-text">${c.text}</div></div></div>`;}).join('');
+}
+function submitComment(){if(!state.currentUser||!activeDetailId)return;const inp=document.getElementById('commentInput'),text=inp.value.trim();if(!text)return;const p=state.posts.find(x=>x.id===activeDetailId);if(!p)return;p.comments=p.comments||[];p.comments.push({author:state.currentUser,text,ts:Date.now()});inp.value='';saveState();renderComments(p);renderFeed();}
+function toggleDetailLike(){if(!state.currentUser||!activeDetailId)return;const p=state.posts.find(x=>x.id===activeDetailId);if(!p)return;p.likes=p.likes||[];const i=p.likes.indexOf(state.currentUser);if(i>-1)p.likes.splice(i,1);else p.likes.push(state.currentUser);const liked=p.likes.includes(state.currentUser);const dlb=document.getElementById('detailLikeBtn');dlb.classList.toggle('liked',liked);dlb.querySelector('svg').setAttribute('fill',liked?'currentColor':'none');document.getElementById('detailLikeCount').textContent=p.likes.length;saveState();renderFeed();}
+function openPostModal(){pendingImages=[];document.getElementById('postModal').classList.add('open');}
+function closePostModal(){
+  document.getElementById('postModal').classList.remove('open');
+  ['postTitle','postDesc','postLink'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('dropzoneText').style.display='';
+  document.getElementById('multiPreview').style.display='none';
+  document.getElementById('multiPreview').innerHTML='';
+  document.getElementById('linkTip').style.display='none';
+  document.getElementById('dropzone').style.borderColor='';
+  pendingImages=[];
+}
+function onLinkInput(val){
+  const tip=document.getElementById('linkTip');
+  const dzText=document.getElementById('dropzoneText');
+  const needsTip=/instagram\.com|xiaohongshu\.com|xhslink\.com/.test(val) && !/pinterest\.com|pin\.it/.test(val);
+  tip.style.display=needsTip?'block':'none';
+  if(needsTip && pendingImages.length===0){
+    dzText.innerHTML='建议上传封面截图，或<span>点击选择</span>';
+    document.getElementById('dropzone').style.borderColor='rgba(212,240,96,0.35)';
+  } else {
+    dzText.innerHTML='将图片拖到这里，或<span>点击选择</span>（可多选）';
+    if(pendingImages.length===0) document.getElementById('dropzone').style.borderColor='';
+  }
+}
+
+function onDragOver(e){e.preventDefault();document.getElementById('dropzone').style.borderColor='#d4f060';}
+function onDragLeave(){document.getElementById('dropzone').style.borderColor='';}
+function onDrop(e){e.preventDefault();document.getElementById('dropzone').style.borderColor='';const files=[...e.dataTransfer.files].filter(f=>f.type.startsWith('image/'));if(files.length)readImgs(files);}
+function onFileSelect(e){const files=[...e.target.files];if(files.length)readImgs(files);e.target.value='';}
+
+function readImgs(files){
+  const prev=document.getElementById('multiPreview');
+  const text=document.getElementById('dropzoneText');
+  let loaded=0;
+  files.forEach(file=>{
+    const r=new FileReader();
+    r.onload=ev=>{
+      pendingImages.push(ev.target.result);
+      loaded++;
+      if(loaded===files.length) renderMultiPreview('multiPreview','dropzoneText',pendingImages);
+    };
+    r.readAsDataURL(file);
+  });
+}
+
+function renderMultiPreview(previewId, textId, images){
+  const prev=document.getElementById(previewId);
+  const text=document.getElementById(textId);
+  text.style.display='none';
+  prev.style.display='flex';
+  prev.innerHTML=images.map((src,i)=>`
+    <div style="position:relative;width:80px;height:80px;border-radius:6px;overflow:hidden;border:0.5px solid rgba(255,255,255,0.1);">
+      <img src="${src}" style="width:100%;height:100%;object-fit:cover;">
+      <button onclick="event.stopPropagation();removeImg(${i},'${previewId}','${textId}')" style="position:absolute;top:2px;right:2px;background:rgba(0,0,0,0.7);border:none;color:#fff;width:18px;height:18px;border-radius:50%;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;">×</button>
+    </div>`).join('');
+  if(images.length>0){
+    const add=`<div onclick="event.stopPropagation();document.getElementById('${previewId==='multiPreview'?'fileInput':'editFileInput'}').click()" style="width:80px;height:80px;border-radius:6px;border:1px dashed rgba(212,240,96,0.4);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:22px;color:rgba(212,240,96,0.6);">+</div>`;
+    prev.innerHTML+=add;
+  }
+}
+
+function removeImg(i, previewId, textId){
+  if(previewId==='multiPreview') pendingImages.splice(i,1);
+  else editImages.splice(i,1);
+  const imgs=previewId==='multiPreview'?pendingImages:editImages;
+  if(!imgs.length){document.getElementById(previewId).style.display='none';document.getElementById(textId).style.display='';}
+  else renderMultiPreview(previewId,textId,imgs);
+}
+
+function submitPost(){
+  const title=document.getElementById('postTitle').value.trim();
+  if(!title){alert('请填写标题');return;}
+  const post={
+    id:'p'+Date.now()+Math.random().toString(36).slice(2,6),
+    title,
+    desc:document.getElementById('postDesc').value.trim(),
+    category:document.getElementById('postCategory').value,
+    link:document.getElementById('postLink').value.trim(),
+    images:pendingImages.length?[...pendingImages]:[],
+    image:pendingImages[0]||'',
+    author:state.currentUser,ts:Date.now(),likes:[],comments:[]
+  };
+  state.posts.push(post);saveState();closePostModal();renderFeed();
+}
+
+let editImages=[];
+function openEditMode(){
+  const p=state.posts.find(x=>x.id===activeDetailId);if(!p)return;
+  document.getElementById('editTitle').value=p.title;
+  document.getElementById('editDesc').value=p.desc||'';
+  document.getElementById('editLink').value=p.link||'';
+  document.getElementById('editCategory').value=p.category;
+  editImages=p.images?[...p.images]:(p.image?[p.image]:[]);
+  if(editImages.length) renderMultiPreview('editMultiPreview','editDropzoneText',editImages);
+  else{document.getElementById('editMultiPreview').style.display='none';document.getElementById('editDropzoneText').style.display='';}
+  document.getElementById('editModal').classList.add('open');
+}
+function closeEditModal(){document.getElementById('editModal').classList.remove('open');editImages=[];}
+function saveEdit(){
+  const p=state.posts.find(x=>x.id===activeDetailId);if(!p)return;
+  p.title=document.getElementById('editTitle').value.trim()||p.title;
+  p.desc=document.getElementById('editDesc').value.trim();
+  p.category=document.getElementById('editCategory').value;
+  p.link=document.getElementById('editLink').value.trim();
+  if(editImages.length){p.images=[...editImages];p.image=editImages[0];}
+  saveState();closeEditModal();openDetail(activeDetailId);renderFeed();
+}
+function deletePost(){
+  if(!confirm('确定要删除这篇帖子吗？'))return;
+  state.posts=state.posts.filter(x=>x.id!==activeDetailId);
+  saveState();closeDetailModal();renderFeed();
+}
+function onEditDragOver(e){e.preventDefault();document.getElementById('editDropzone').style.borderColor='#d4f060';}
+function onEditDragLeave(){document.getElementById('editDropzone').style.borderColor='';}
+function onEditDrop(e){e.preventDefault();document.getElementById('editDropzone').style.borderColor='';const files=[...e.dataTransfer.files].filter(f=>f.type.startsWith('image/'));if(files.length){files.forEach(file=>{const r=new FileReader();r.onload=ev=>{editImages.push(ev.target.result);renderMultiPreview('editMultiPreview','editDropzoneText',editImages);};r.readAsDataURL(file)});}}
+function onEditFileSelect(e){const files=[...e.target.files];files.forEach(file=>{const r=new FileReader();r.onload=ev=>{editImages.push(ev.target.result);renderMultiPreview('editMultiPreview','editDropzoneText',editImages);};r.readAsDataURL(file)});e.target.value='';}
+
+function getPlatformInfo(url){
+  if(/instagram\.com/.test(url)) return {name:'Instagram',color:'#E1306C',bg:'rgba(225,48,108,0.15)'};
+  if(/twitter\.com|x\.com/.test(url)) return {name:'X / Twitter',color:'#f0ede6',bg:'rgba(240,237,230,0.08)'};
+  if(/xiaohongshu\.com|xhslink\.com/.test(url)) return {name:'小红书',color:'#FF2442',bg:'rgba(255,36,66,0.15)'};
+  if(/pinterest\.com|pin\.it/.test(url)) return {name:'Pinterest',color:'#E60023',bg:'rgba(230,0,35,0.12)'};
+  if(/youtube\.com|youtu\.be/.test(url)) return {name:'YouTube',color:'#FF0000',bg:'rgba(255,0,0,0.12)'};
+  if(/tiktok\.com/.test(url)) return {name:'TikTok',color:'#f0ede6',bg:'rgba(240,237,230,0.08)'};
+  return {name:'链接',color:'#d4f060',bg:'rgba(212,240,96,0.08)'};
+}
+
+function buildLinkCard(url, thumbUrl, title){
+  const pi=getPlatformInfo(url);
+  let shortUrl=url;
+  try{const u=new URL(url);shortUrl=u.hostname.replace('www.','')+u.pathname.slice(0,36)+(u.pathname.length>36?'…':'');}catch(e){}
+  if(thumbUrl){
+    return `<a href="${url}" target="_blank" rel="noopener" class="fw-rich-card" onclick="event.stopPropagation()">
+      <div class="fw-rich-thumb" style="background-image:url('${thumbUrl}')">
+        <div class="fw-rich-platform-badge" style="background:${pi.bg};color:${pi.color}">${pi.name}</div>
+        <div class="fw-rich-play">▶</div>
+      </div>
+      <div class="fw-rich-info">
+        <div class="fw-rich-title">${title||shortUrl}</div>
+        <div class="fw-rich-url">${shortUrl}</div>
+      </div>
+    </a>`;
+  }
+  // fallback: colored banner card
+  return `<a href="${url}" target="_blank" rel="noopener" class="fw-rich-card" onclick="event.stopPropagation()">
+    <div class="fw-rich-thumb" style="background:${pi.bg};display:flex;align-items:center;justify-content:center;">
+      <div style="font-size:13px;color:${pi.color};font-family:'DM Mono',monospace;letter-spacing:0.06em;">${pi.name}</div>
+    </div>
+    <div class="fw-rich-info">
+      <div class="fw-rich-title">${title||shortUrl}</div>
+      <div class="fw-rich-url">${shortUrl}</div>
+    </div>
+  </a>`;
+}
+
+async function fetchLinkThumb(url, container){
+  try{
+    // YouTube — 直接用官方缩略图
+    const ytM=url.match(/youtube\.com\/watch\?v=([^&]+)/)||url.match(/youtu\.be\/([^?]+)/);
+    if(ytM){
+      container.innerHTML=buildLinkCard(url,`https://img.youtube.com/vi/${ytM[1]}/hqdefault.jpg`,'YouTube 视频');
+      return;
+    }
+    // Pinterest oEmbed — 官方支持，无需 API key
+    if(/pinterest\.com|pin\.it/.test(url)){
+      const oe=await fetch(`https://www.pinterest.com/oembed.json?url=${encodeURIComponent(url)}`).then(r=>r.json()).catch(()=>null);
+      if(oe&&oe.thumbnail_url){
+        container.innerHTML=buildLinkCard(url, oe.thumbnail_url, oe.title||'Pinterest');
+        return;
+      }
+    }
+    // 其他平台用 microlink.io
+    const res=await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`);
+    const data=await res.json();
+    if(data.status==='success'){
+      const img=data.data?.image?.url||data.data?.screenshot?.url||null;
+      const title=data.data?.title||null;
+      if(img) container.innerHTML=buildLinkCard(url,img,title);
+    }
+  }catch(e){}
+}
+
+loadState();
+// restore theme
+if(localStorage.getItem('fwm_theme')==='light'){
+  document.getElementById('fwm-app').classList.add('light');
+  document.getElementById('themeBtn').textContent='☀️';
+  document.body.style.background='#f5f4f0';
+}
+if(state.currentUser&&state.users[state.currentUser]){document.getElementById('navAvatar').textContent=state.users[state.currentUser].initials;document.getElementById('authOverlay').style.display='none';renderFeed();}
+</script>
+</body>
+</html>
