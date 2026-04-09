@@ -719,17 +719,27 @@ function removeImg(i, previewId, textId){
   else renderMultiPreview(previewId,textId,imgs);
 }
 
-function submitPost(){
+async function submitPost(){
   const title=document.getElementById('postTitle').value.trim();
   if(!title){alert('请填写标题');return;}
+
+  const link=document.getElementById('postLink').value.trim();
+  let images=pendingImages.length?[...pendingImages]:[];
+
+  // 没有手动上传图片时，自动尝试抓取外链封面
+  if(!images.length && link){
+    const meta = await fetchAutoCover(link);
+    if(meta?.cover) images=[meta.cover];
+  }
+
   const post={
     id:'p'+Date.now()+Math.random().toString(36).slice(2,6),
     title,
     desc:document.getElementById('postDesc').value.trim(),
     category:document.getElementById('postCategory').value,
-    link:document.getElementById('postLink').value.trim(),
-    images:pendingImages.length?[...pendingImages]:[],
-    image:pendingImages[0]||'',
+    link,
+    images,
+    image:images[0]||'',
     author:state.currentUser,ts:Date.now(),likes:[],comments:[]
   };
   state.posts.push(post);saveState();closePostModal();renderFeed();
@@ -748,13 +758,22 @@ function openEditMode(){
   document.getElementById('editModal').classList.add('open');
 }
 function closeEditModal(){document.getElementById('editModal').classList.remove('open');editImages=[];}
-function saveEdit(){
+async function saveEdit(){
   const p=state.posts.find(x=>x.id===activeDetailId);if(!p)return;
   p.title=document.getElementById('editTitle').value.trim()||p.title;
   p.desc=document.getElementById('editDesc').value.trim();
   p.category=document.getElementById('editCategory').value;
   p.link=document.getElementById('editLink').value.trim();
-  if(editImages.length){p.images=[...editImages];p.image=editImages[0];}
+  if(editImages.length){
+    p.images=[...editImages];
+    p.image=editImages[0];
+  } else if(p.link){
+    const meta = await fetchAutoCover(p.link);
+    if(meta?.cover){
+      p.images=[meta.cover];
+      p.image=meta.cover;
+    }
+  }
   saveState();closeEditModal();openDetail(activeDetailId);renderFeed();
 }
 function deletePost(){
@@ -766,6 +785,105 @@ function onEditDragOver(e){e.preventDefault();document.getElementById('editDropz
 function onEditDragLeave(){document.getElementById('editDropzone').style.borderColor='';}
 function onEditDrop(e){e.preventDefault();document.getElementById('editDropzone').style.borderColor='';const files=[...e.dataTransfer.files].filter(f=>f.type.startsWith('image/'));if(files.length){files.forEach(file=>{const r=new FileReader();r.onload=ev=>{editImages.push(ev.target.result);renderMultiPreview('editMultiPreview','editDropzoneText',editImages);};r.readAsDataURL(file)});}}
 function onEditFileSelect(e){const files=[...e.target.files];files.forEach(file=>{const r=new FileReader();r.onload=ev=>{editImages.push(ev.target.result);renderMultiPreview('editMultiPreview','editDropzoneText',editImages);};r.readAsDataURL(file)});e.target.value='';}
+
+function escapeHtml(str){
+  return String(str||'').replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[s]));
+}
+
+function extractBilibiliBV(url){
+  if(!url) return null;
+  const m = url.match(/\/video\/(BV[0-9A-Za-z]+)/i);
+  return m ? m[1] : null;
+}
+
+function normalizeBilibiliCover(url){
+  if(!url) return null;
+  let clean = String(url).replace(/\u002F/g,'/').replace(/\\\//g,'/').replace(/\\/g,'');
+  if(clean.startsWith('//')) clean = 'https:' + clean;
+  if(clean.startsWith('http://')) clean = 'https://' + clean.slice(7);
+  return clean;
+}
+
+async function fetchBilibiliMeta(url){
+  if(!url || !/bilibili\.com|b23\.tv/.test(url)) return null;
+
+  // 最稳：走你自己的后端代理，兼容 b23 短链和 B 站页面抓取
+  try{
+    const res = await fetch(`/api/bilibili-meta?url=${encodeURIComponent(url)}`);
+    if(res.ok){
+      const data = await res.json();
+      if(data?.cover){
+        return {
+          cover: normalizeBilibiliCover(data.cover),
+          title: data.title || '哔哩哔哩视频',
+          url: data.url || url
+        };
+      }
+    }
+  }catch(e){}
+
+  // 前端兜底：仅对已经带 BV 的完整链接尝试 noembed / microlink
+  const bv = extractBilibiliBV(url);
+  if(!bv) return null;
+
+  try{
+    const oe = await fetch(`https://noembed.com/embed?url=${encodeURIComponent('https://www.bilibili.com/video/' + bv)}`).then(r=>r.json()).catch(()=>null);
+    if(oe?.thumbnail_url){
+      return {
+        cover: normalizeBilibiliCover(oe.thumbnail_url),
+        title: oe.title || '哔哩哔哩视频',
+        url
+      };
+    }
+  }catch(e){}
+
+  try{
+    const ml = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`).then(r=>r.json()).catch(()=>null);
+    if(ml?.status === 'success' && ml.data?.image?.url){
+      return {
+        cover: normalizeBilibiliCover(ml.data.image.url),
+        title: ml.data.title || '哔哩哔哩视频',
+        url
+      };
+    }
+  }catch(e){}
+
+  return null;
+}
+
+async function fetchAutoCover(url){
+  if(!url) return null;
+
+  const ytM = url.match(/youtube\.com\/watch\?v=([^&]+)/) || url.match(/youtu\.be\/([^?]+)/);
+  if(ytM){
+    return { cover:`https://i.ytimg.com/vi/${ytM[1]}/hqdefault.jpg`, title:'YouTube 视频' };
+  }
+
+  if(/bilibili\.com|b23\.tv/.test(url)){
+    return await fetchBilibiliMeta(url);
+  }
+
+  if(/pinterest\.com|pin\.it/.test(url)){
+    try{
+      const oe=await fetch(`https://www.pinterest.com/oembed.json?url=${encodeURIComponent(url)}`).then(r=>r.json()).catch(()=>null);
+      if(oe?.thumbnail_url){
+        return { cover: oe.thumbnail_url, title: oe.title || 'Pinterest' };
+      }
+    }catch(e){}
+  }
+
+  try{
+    const data = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`).then(r=>r.json()).catch(()=>null);
+    if(data?.status === 'success'){
+      const cover = data.data?.image?.url || data.data?.screenshot?.url || null;
+      if(cover){
+        return { cover, title: data.data?.title || null };
+      }
+    }
+  }catch(e){}
+
+  return null;
+}
 
 function getPlatformInfo(url){
   if(/instagram\.com/.test(url)) return {name:'Instagram',color:'#E1306C',bg:'rgba(225,48,108,0.15)'};
@@ -783,15 +901,18 @@ function buildLinkCard(url, thumbUrl, title){
   const pi=getPlatformInfo(url);
   let shortUrl=url;
   try{const u=new URL(url);shortUrl=u.hostname.replace('www.','')+u.pathname.slice(0,36)+(u.pathname.length>36?'…':'');}catch(e){}
+  const safeTitle = escapeHtml(title||shortUrl);
+  const safeShortUrl = escapeHtml(shortUrl);
+  const safeThumb = thumbUrl ? String(thumbUrl).replace(/'/g, '%27') : '';
   if(thumbUrl){
     return `<a href="${url}" target="_blank" rel="noopener" class="fw-rich-card" onclick="event.stopPropagation()">
-      <div class="fw-rich-thumb" style="background-image:url('${thumbUrl}')">
+      <div class="fw-rich-thumb" style="background-image:url('${safeThumb}')">
         <div class="fw-rich-platform-badge" style="background:${pi.bg};color:${pi.color}">${pi.name}</div>
         <div class="fw-rich-play">▶</div>
       </div>
       <div class="fw-rich-info">
-        <div class="fw-rich-title">${title||shortUrl}</div>
-        <div class="fw-rich-url">${shortUrl}</div>
+        <div class="fw-rich-title">${safeTitle}</div>
+        <div class="fw-rich-url">${safeShortUrl}</div>
       </div>
     </a>`;
   }
@@ -801,53 +922,17 @@ function buildLinkCard(url, thumbUrl, title){
       <div style="font-size:13px;color:${pi.color};font-family:'DM Mono',monospace;letter-spacing:0.06em;">${pi.name}</div>
     </div>
     <div class="fw-rich-info">
-      <div class="fw-rich-title">${title||shortUrl}</div>
-      <div class="fw-rich-url">${shortUrl}</div>
+      <div class="fw-rich-title">${safeTitle}</div>
+      <div class="fw-rich-url">${safeShortUrl}</div>
     </div>
   </a>`;
 }
 
 async function fetchLinkThumb(url, container){
   try{
-    // YouTube — 直接用官方缩略图
-    const ytM=url.match(/youtube\.com\/watch\?v=([^&]+)/)||url.match(/youtu\.be\/([^?]+)/);
-    if(ytM){
-      container.innerHTML=buildLinkCard(url,`https://i.ytimg.com/vi/${ytM[1]}/hqdefault.jpg`,'YouTube 视频');
-      return;
-    }
-    // B站 — 用 noembed 代理抓封面
-    if(/bilibili\.com|b23\.tv/.test(url)){
-      const bvM=url.match(/\/video\/(BV\w+)/i);
-      if(bvM){
-        // 用 noembed 作为代理
-        const oe=await fetch(`https://noembed.com/embed?url=${encodeURIComponent('https://www.bilibili.com/video/'+bvM[1])}`).then(r=>r.json()).catch(()=>null);
-        if(oe&&oe.thumbnail_url){
-          container.innerHTML=buildLinkCard(url, oe.thumbnail_url, oe.title||'哔哩哔哩视频');
-          return;
-        }
-        // fallback: microlink
-        const ml=await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`).then(r=>r.json()).catch(()=>null);
-        if(ml&&ml.status==='success'&&ml.data?.image?.url){
-          container.innerHTML=buildLinkCard(url, ml.data.image.url, ml.data.title||'哔哩哔哩视频');
-          return;
-        }
-      }
-    }
-    // Pinterest oEmbed
-    if(/pinterest\.com|pin\.it/.test(url)){
-      const oe=await fetch(`https://www.pinterest.com/oembed.json?url=${encodeURIComponent(url)}`).then(r=>r.json()).catch(()=>null);
-      if(oe&&oe.thumbnail_url){
-        container.innerHTML=buildLinkCard(url, oe.thumbnail_url, oe.title||'Pinterest');
-        return;
-      }
-    }
-    // 其他平台用 microlink.io
-    const res=await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`);
-    const data=await res.json();
-    if(data.status==='success'){
-      const img=data.data?.image?.url||data.data?.screenshot?.url||null;
-      const title=data.data?.title||null;
-      if(img) container.innerHTML=buildLinkCard(url,img,title);
+    const meta = await fetchAutoCover(url);
+    if(meta?.cover){
+      container.innerHTML=buildLinkCard(url, meta.cover, meta.title);
     }
   }catch(e){}
 }
