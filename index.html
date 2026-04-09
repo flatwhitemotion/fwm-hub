@@ -181,6 +181,43 @@ body { background: #0e0e0e; }
 .fw-carousel-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: background 0.15s; }
 .fw-carousel-dot.active { background: #fff; }
 .fw-img-count { position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.6); color: #fff; font-family: 'DM Mono', monospace; font-size: 10px; padding: 3px 7px; border-radius: 4px; }
+
+/* MESSAGE BOARD */
+.fw-msgboard { position: fixed; top: 0; right: -380px; width: 360px; height: 100vh; background: #161616; border-left: 0.5px solid rgba(255,255,255,0.08); z-index: 150; display: flex; flex-direction: column; transition: right 0.28s cubic-bezier(0.4,0,0.2,1); }
+.fw-msgboard.open { right: 0; }
+#fwm-app.light .fw-msgboard { background: #fff; border-left-color: rgba(0,0,0,0.08); }
+.fw-msgboard-head { padding: 16px 20px; border-bottom: 0.5px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+#fwm-app.light .fw-msgboard-head { border-bottom-color: rgba(0,0,0,0.08); }
+.fw-msgboard-title { font-family: 'Instrument Serif', serif; font-size: 17px; font-weight: 400; }
+.fw-msgboard-list { flex: 1; overflow-y: auto; padding: 16px 20px; display: flex; flex-direction: column; gap: 14px; }
+.fw-msg-item { display: flex; gap: 10px; }
+.fw-msg-bubble { flex: 1; background: #1e1e1e; border: 0.5px solid rgba(255,255,255,0.06); border-radius: 10px; border-top-left-radius: 3px; padding: 10px 12px; }
+#fwm-app.light .fw-msg-bubble { background: #f5f4f0; border-color: rgba(0,0,0,0.06); }
+.fw-msg-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; flex-wrap: wrap; }
+.fw-msg-name { font-family: 'DM Mono', monospace; font-size: 11px; color: #d4f060; }
+#fwm-app.light .fw-msg-name { color: #5a8a00; }
+.fw-msg-tag { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(240,237,230,0.35); padding: 1px 7px; border-radius: 40px; background: rgba(255,255,255,0.05); }
+#fwm-app.light .fw-msg-tag { color: rgba(0,0,0,0.35); background: rgba(0,0,0,0.05); }
+.fw-msg-ts { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(240,237,230,0.25); margin-left: auto; }
+.fw-msg-text { font-size: 13px; color: rgba(240,237,230,0.8); line-height: 1.6; }
+#fwm-app.light .fw-msg-text { color: rgba(0,0,0,0.7); }
+.fw-msgboard-footer { padding: 14px 20px; border-top: 0.5px solid rgba(255,255,255,0.08); flex-shrink: 0; display: flex; flex-direction: column; gap: 10px; }
+#fwm-app.light .fw-msgboard-footer { border-top-color: rgba(0,0,0,0.08); }
+.fw-msg-types { display: flex; gap: 6px; flex-wrap: wrap; }
+.fw-msg-type-btn { font-family: 'DM Mono', monospace; font-size: 10px; padding: 4px 10px; border-radius: 40px; cursor: pointer; border: 0.5px solid rgba(255,255,255,0.1); background: none; color: rgba(240,237,230,0.45); transition: all 0.12s; }
+.fw-msg-type-btn.active { border-color: #d4f060; background: rgba(212,240,96,0.1); color: #d4f060; }
+#fwm-app.light .fw-msg-type-btn { border-color: rgba(0,0,0,0.1); color: rgba(0,0,0,0.45); }
+#fwm-app.light .fw-msg-type-btn.active { border-color: #5a8a00; background: rgba(90,138,0,0.08); color: #5a8a00; }
+.fw-msg-row { display: flex; gap: 8px; align-items: flex-end; }
+.fw-msg-textarea { flex: 1; background: #0e0e0e; border: 0.5px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 9px 12px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: #f0ede6; outline: none; resize: none; min-height: 68px; line-height: 1.5; }
+#fwm-app.light .fw-msg-textarea { background: #f5f4f0; border-color: rgba(0,0,0,0.1); color: #1a1a1a; }
+.fw-msg-textarea:focus { border-color: rgba(212,240,96,0.4); }
+.fw-msg-textarea::placeholder { color: rgba(240,237,230,0.35); }
+#fwm-app.light .fw-msg-textarea::placeholder { color: rgba(0,0,0,0.3); }
+.fw-msg-send { background: #d4f060; color: #0e0e0e; border: none; border-radius: 8px; padding: 9px 14px; font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap; height: 38px; }
+.fw-msg-send:hover { opacity: 0.88; }
+.fw-msgboard-empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: rgba(240,237,230,0.25); font-size: 13px; text-align: center; padding: 20px; }
+.fw-overlay-bg { display: none; position: fixed; inset: 0; z-index: 140; }
 .fw-detail-thumb img { width: 100%; height: 100%; object-fit: cover; }
 .fw-detail-ph { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 12px; color: rgba(240,237,230,0.3); }
 .fw-detail-body { padding: 22px; }
@@ -230,6 +267,7 @@ body { background: #0e0e0e; }
     <div class="fw-logo">flatwhite<span>/</span>motion</div>
     <div style="display:flex;gap:10px;align-items:center;">
       <button onclick="openPostModal()" style="background:#d4f060;color:#0e0e0e;border:none;border-radius:40px;padding:8px 18px;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;cursor:pointer;letter-spacing:0.04em;">+ 分享</button>
+      <button onclick="openMsgBoard()" title="留言板" style="background:none;border:0.5px solid rgba(255,255,255,0.1);color:rgba(240,237,230,0.55);padding:7px 14px;border-radius:40px;cursor:pointer;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.04em;">💬 留言</button>
       <button id="themeBtn" onclick="toggleTheme()" title="切换亮暗模式" style="background:none;border:0.5px solid rgba(255,255,255,0.1);color:rgba(240,237,230,0.6);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;">🌙</button>
       <div id="navAvatar" onclick="doLogout()" title="退出登录" style="width:32px;height:32px;border-radius:50%;background:#2a2a2a;border:0.5px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;color:rgba(240,237,230,0.45);cursor:pointer;">—</div>
     </div>
@@ -288,7 +326,7 @@ body { background: #0e0e0e; }
           <div class="fw-label">视频 / 外部链接（可选）</div>
           <input class="fw-input" type="url" id="postLink" placeholder="https://instagram.com/..." oninput="onLinkInput(this.value)">
           <div id="linkTip" style="display:none;margin-top:8px;padding:10px 12px;background:rgba(212,240,96,0.06);border:0.5px solid rgba(212,240,96,0.2);border-radius:6px;font-size:12px;color:rgba(240,237,230,0.6);line-height:1.6;">
-            💡 Instagram / 小红书 封面图无法自动抓取，建议同时上传截图作为封面
+            💡 Instagram / 小红书 / 哔哩哔哩 封面图无法自动抓取，建议同时上传截图作为封面
           </div>
         </div>
       </div>
@@ -367,6 +405,27 @@ body { background: #0e0e0e; }
       </div>
     </div>
   </div>
+  <!-- MESSAGE BOARD -->
+  <div class="fw-overlay-bg" id="msgOverlayBg" onclick="closeMsgBoard()"></div>
+  <div class="fw-msgboard" id="msgBoard">
+    <div class="fw-msgboard-head">
+      <div class="fw-msgboard-title">留言板</div>
+      <button onclick="closeMsgBoard()" style="background:none;border:none;color:rgba(240,237,230,0.45);font-size:20px;cursor:pointer;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;">×</button>
+    </div>
+    <div class="fw-msgboard-list" id="msgList"></div>
+    <div class="fw-msgboard-footer">
+      <div class="fw-msg-types" id="msgTypeRow">
+        <button class="fw-msg-type-btn active" onclick="selectMsgType(this,'💡 建议')">💡 建议</button>
+        <button class="fw-msg-type-btn" onclick="selectMsgType(this,'🐛 问题')">🐛 问题</button>
+        <button class="fw-msg-type-btn" onclick="selectMsgType(this,'✨ 感受')">✨ 感受</button>
+        <button class="fw-msg-type-btn" onclick="selectMsgType(this,'💬 闲聊')">💬 闲聊</button>
+      </div>
+      <div class="fw-msg-row">
+        <textarea class="fw-msg-textarea" id="msgInput" placeholder="说点什么…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg();}"></textarea>
+        <button class="fw-msg-send" onclick="sendMsg()">发送</button>
+      </div>
+    </div>
+  </div>
 
 </div>
 
@@ -375,6 +434,69 @@ body { background: #0e0e0e; }
 const STORAGE_KEY = 'fwm_hub_v4';
 let state = { users:{}, posts:[], currentUser:null };
 let currentFilter='all', activeDetailId=null, pendingImages=[];
+
+// ── MESSAGE BOARD ──
+let msgType = '💡 建议';
+let msgBoardOpen = false;
+
+function selectMsgType(btn, type){
+  msgType = type;
+  document.querySelectorAll('.fw-msg-type-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function openMsgBoard(){
+  msgBoardOpen = true;
+  document.getElementById('msgBoard').classList.add('open');
+  document.getElementById('msgOverlayBg').style.display = 'block';
+  renderMsgList();
+  setTimeout(()=>document.getElementById('msgInput').focus(), 300);
+}
+
+function closeMsgBoard(){
+  msgBoardOpen = false;
+  document.getElementById('msgBoard').classList.remove('open');
+  document.getElementById('msgOverlayBg').style.display = 'none';
+}
+
+function renderMsgList(){
+  const list = document.getElementById('msgList');
+  const msgs = (state.feedbacks||[]);
+  if(!msgs.length){
+    list.innerHTML = '<div class="fw-msgboard-empty">◌<br>还没有留言<br>来第一个说点什么吧</div>';
+    return;
+  }
+  list.innerHTML = msgs.map(m=>{
+    const u = state.users[m.author]||{};
+    return `<div class="fw-msg-item">
+      <div class="fw-avatar-sm" style="flex-shrink:0;margin-top:2px;">${u.initials||'?'}</div>
+      <div class="fw-msg-bubble">
+        <div class="fw-msg-meta">
+          <span class="fw-msg-name">${m.name||u.name||'匿名'}</span>
+          <span class="fw-msg-tag">${m.type}</span>
+          <span class="fw-msg-ts">${timeAgo(m.ts)}</span>
+        </div>
+        <div class="fw-msg-text">${m.text}</div>
+      </div>
+    </div>`;
+  }).join('');
+  list.scrollTop = list.scrollHeight;
+}
+
+function sendMsg(){
+  const inp = document.getElementById('msgInput');
+  const text = inp.value.trim();
+  if(!text || !state.currentUser) return;
+  const u = state.users[state.currentUser]||{};
+  state.feedbacks = state.feedbacks||[];
+  state.feedbacks.push({ id:'fb'+Date.now(), author:state.currentUser, name:u.name||'匿名', type:msgType, text, ts:Date.now() });
+  inp.value = '';
+  saveState();
+  renderMsgList();
+}
+
+// update nav button to open msg board
+function openFeedbackModal(){ openMsgBoard(); }
 
 function toggleTheme(){
   const app=document.getElementById('fwm-app');
@@ -438,10 +560,20 @@ function timeAgo(ts){const d=Date.now()-ts;if(d<60000)return'刚刚';if(d<360000
 
 function cardHTML(p){
   const u=state.users[p.author]||{},liked=p.likes&&state.currentUser&&p.likes.includes(state.currentUser);
-  const isV=p.link&&/instagram|twitter|xiaohongshu|x\.com|tiktok|vimeo|youtube/.test(p.link);
+  const isV=p.link&&/instagram|twitter|xiaohongshu|x\.com|tiktok|vimeo|youtube|bilibili|b23\.tv/.test(p.link);
   const imgs=p.images&&p.images.length?p.images:(p.image?[p.image]:[]);
-  const getPlatform=u=>{if(/instagram/.test(u))return'Instagram';if(/twitter|x\.com/.test(u))return'X';if(/xiaohongshu|xhslink/.test(u))return'小红书';if(/pinterest\.com|pin\.it/.test(u))return'Pinterest';if(/vimeo/.test(u))return'Vimeo';if(/youtube|youtu\.be/.test(u))return'YouTube';if(/tiktok/.test(u))return'TikTok';return'链接';};
-  const thumb=imgs.length?`<img src="${imgs[0]}" alt="">`:`<div class="fw-thumb-ph">${isV?'▶ '+getPlatform(p.link):'◌ 暂无图片'}</div>`;
+  const getPlatform=u=>{if(/instagram/.test(u))return'Instagram';if(/twitter|x\.com/.test(u))return'X';if(/xiaohongshu|xhslink/.test(u))return'小红书';if(/pinterest\.com|pin\.it/.test(u))return'Pinterest';if(/bilibili\.com|b23\.tv/.test(u))return'哔哩哔哩';if(/vimeo/.test(u))return'Vimeo';if(/youtube|youtu\.be/.test(u))return'YouTube';if(/tiktok/.test(u))return'TikTok';return'链接';};
+  // auto extract YouTube thumbnail for card
+  let autoThumb = null;
+  if(!imgs.length && p.link){
+    const ytM=p.link.match(/youtube\.com\/watch\?v=([^&]+)/)||p.link.match(/youtu\.be\/([^?]+)/);
+    if(ytM) autoThumb=`https://i.ytimg.com/vi/${ytM[1]}/hqdefault.jpg`;
+  }
+  const thumb=imgs.length
+    ? `<img src="${imgs[0]}" alt="">`
+    : autoThumb
+      ? `<img src="${autoThumb}" alt="" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.parentElement.innerHTML='<div class=fw-thumb-ph>▶ YouTube</div>'">`
+      : `<div class="fw-thumb-ph">${isV?'▶ '+getPlatform(p.link):'◌ 暂无图片'}</div>`;
   const multiBadge=imgs.length>1?`<div class="fw-img-count">⊞ ${imgs.length}</div>`:'';
   return `<div class="fw-card" data-cat="${p.category}" onclick="openDetail('${p.id}')">
     <div class="fw-thumb">${thumb}${isV?'<div class="fw-vbadge">视频</div>':''}${multiBadge}</div>
@@ -532,7 +664,7 @@ function closePostModal(){
 function onLinkInput(val){
   const tip=document.getElementById('linkTip');
   const dzText=document.getElementById('dropzoneText');
-  const needsTip=/instagram\.com|xiaohongshu\.com|xhslink\.com/.test(val) && !/pinterest\.com|pin\.it/.test(val);
+  const needsTip=/instagram\.com|xiaohongshu\.com|xhslink\.com|bilibili\.com|b23\.tv/.test(val) && !/pinterest\.com|pin\.it/.test(val);
   tip.style.display=needsTip?'block':'none';
   if(needsTip && pendingImages.length===0){
     dzText.innerHTML='建议上传封面截图，或<span>点击选择</span>';
@@ -642,6 +774,8 @@ function getPlatformInfo(url){
   if(/pinterest\.com|pin\.it/.test(url)) return {name:'Pinterest',color:'#E60023',bg:'rgba(230,0,35,0.12)'};
   if(/youtube\.com|youtu\.be/.test(url)) return {name:'YouTube',color:'#FF0000',bg:'rgba(255,0,0,0.12)'};
   if(/tiktok\.com/.test(url)) return {name:'TikTok',color:'#f0ede6',bg:'rgba(240,237,230,0.08)'};
+  if(/bilibili\.com|b23\.tv/.test(url)) return {name:'哔哩哔哩',color:'#00AEEC',bg:'rgba(0,174,236,0.12)'};
+  if(/vimeo\.com/.test(url)) return {name:'Vimeo',color:'#1ab7ea',bg:'rgba(26,183,234,0.15)'};
   return {name:'链接',color:'#d4f060',bg:'rgba(212,240,96,0.08)'};
 }
 
@@ -678,10 +812,28 @@ async function fetchLinkThumb(url, container){
     // YouTube — 直接用官方缩略图
     const ytM=url.match(/youtube\.com\/watch\?v=([^&]+)/)||url.match(/youtu\.be\/([^?]+)/);
     if(ytM){
-      container.innerHTML=buildLinkCard(url,`https://img.youtube.com/vi/${ytM[1]}/hqdefault.jpg`,'YouTube 视频');
+      container.innerHTML=buildLinkCard(url,`https://i.ytimg.com/vi/${ytM[1]}/hqdefault.jpg`,'YouTube 视频');
       return;
     }
-    // Pinterest oEmbed — 官方支持，无需 API key
+    // B站 — 用 noembed 代理抓封面
+    if(/bilibili\.com|b23\.tv/.test(url)){
+      const bvM=url.match(/\/video\/(BV\w+)/i);
+      if(bvM){
+        // 用 noembed 作为代理
+        const oe=await fetch(`https://noembed.com/embed?url=${encodeURIComponent('https://www.bilibili.com/video/'+bvM[1])}`).then(r=>r.json()).catch(()=>null);
+        if(oe&&oe.thumbnail_url){
+          container.innerHTML=buildLinkCard(url, oe.thumbnail_url, oe.title||'哔哩哔哩视频');
+          return;
+        }
+        // fallback: microlink
+        const ml=await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`).then(r=>r.json()).catch(()=>null);
+        if(ml&&ml.status==='success'&&ml.data?.image?.url){
+          container.innerHTML=buildLinkCard(url, ml.data.image.url, ml.data.title||'哔哩哔哩视频');
+          return;
+        }
+      }
+    }
+    // Pinterest oEmbed
     if(/pinterest\.com|pin\.it/.test(url)){
       const oe=await fetch(`https://www.pinterest.com/oembed.json?url=${encodeURIComponent(url)}`).then(r=>r.json()).catch(()=>null);
       if(oe&&oe.thumbnail_url){
